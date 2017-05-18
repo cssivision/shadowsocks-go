@@ -17,7 +17,7 @@ import (
 	"sync"
 	"syscall"
 
-	ss "github.com/shadowsocks/shadowsocks-go/shadowsocks"
+	ss "github.com/cssivision/shadowsocks-go/shadowsocks"
 )
 
 const (
@@ -122,14 +122,11 @@ func handleConnection(conn *ss.Conn, auth bool) {
 
 	// function arguments are always evaluated, so surround debug statement
 	// with if statement
-	if debug {
-		debug.Printf("new client %s->%s\n", conn.RemoteAddr().String(), conn.LocalAddr())
-	}
+	debug.Printf("new client %s->%s\n", conn.RemoteAddr().String(), conn.LocalAddr())
 	closed := false
 	defer func() {
-		if debug {
-			debug.Printf("closed pipe %s<->%s\n", conn.RemoteAddr(), host)
-		}
+		debug.Printf("closed pipe %s<->%s\n", conn.RemoteAddr(), host)
+
 		connCnt--
 		if !closed {
 			conn.Close()
@@ -165,9 +162,8 @@ func handleConnection(conn *ss.Conn, auth bool) {
 			remote.Close()
 		}
 	}()
-	if debug {
-		debug.Printf("piping %s<->%s ota=%v connOta=%v", conn.RemoteAddr(), host, ota, conn.IsOta())
-	}
+
+	debug.Printf("piping %s<->%s ota=%v connOta=%v", conn.RemoteAddr(), host, ota, conn.IsOta())
 	if ota {
 		go ss.PipeThenCloseOta(conn, remote)
 	} else {
@@ -323,7 +319,7 @@ func run(port, password string, auth bool) {
 		if err != nil {
 			// listener maybe closed to update password
 			debug.Printf("accept error: %v\n", err)
-			return
+			continue
 		}
 		// Creating cipher upon first connection.
 		if cipher == nil {
